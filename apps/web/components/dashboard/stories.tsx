@@ -8,6 +8,12 @@ interface Story {
 }
 const mockStories = [
   {
+    id: "your_story",
+    username: "Your Story",
+    avatar:
+      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=60&h=60&fit=crop&crop=face",
+  },
+  {
     id: "1",
     username: "sarah_johnson",
     avatar:
