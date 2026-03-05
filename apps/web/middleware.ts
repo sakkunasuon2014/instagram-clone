@@ -1,7 +1,7 @@
 import { getSessionCookie } from "better-auth/cookies";
 import { NextRequest, NextResponse } from "next/server";
 
-const publicRoutes = ["/login", "signup"];
+const publicRoutes = ["/login", "/signup"];
 
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
