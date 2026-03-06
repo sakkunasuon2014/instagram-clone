@@ -8,6 +8,13 @@
       "when": 1772625694657,
       "tag": "0000_high_thor_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1772777348748,
+      "tag": "0001_round_blade",
+      "breakpoints": true
     }
   ]
 }

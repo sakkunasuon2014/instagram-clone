@@ -8,6 +8,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { AppController } from './app.controller';
 import { APP_GUARD } from '@nestjs/core';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { APP_GUARD } from '@nestjs/core';
       }),
       inject: [DATABASE_CONNECTION, ConfigService],
     }),
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [
