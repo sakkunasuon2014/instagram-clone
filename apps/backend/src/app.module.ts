@@ -9,11 +9,16 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { AppController } from './app.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { PostsModule } from './posts/posts.module';
+import { TRPCModule } from 'nestjs-trpc-v2';
+import { UsersModule } from './auth/users/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     DatabaseModule,
+    TRPCModule.forRoot({
+      autoSchemaFile: '../../packages/trpc/src/server',
+    }),
     AuthModule.forRootAsync({
       imports: [DatabaseModule, ConfigModule],
       useFactory: (database: NodePgDatabase, configService: ConfigService) => ({
@@ -30,6 +35,7 @@ import { PostsModule } from './posts/posts.module';
       inject: [DATABASE_CONNECTION, ConfigService],
     }),
     PostsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [
