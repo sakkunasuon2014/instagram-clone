@@ -20,7 +20,7 @@ export const schema = {
           connectionString: configService.getOrThrow('DATABASE_URL'),
         });
         return drizzle(pool, {
-          schema: {},
+          schema,
         });
       },
       inject: [ConfigService],
