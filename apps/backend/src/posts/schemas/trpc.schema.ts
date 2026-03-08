@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const createPostSchema = z.object({
   caption: z.string().min(1, 'caption is required'),
+  image: z.string().min(1, 'image is required'),
 });
 
 export const postSchema = z.object({
