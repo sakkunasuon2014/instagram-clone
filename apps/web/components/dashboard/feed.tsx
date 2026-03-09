@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { Heart, MessageCircle, User } from "lucide-react";
+import { getImageUrl } from "../../lib/image";
 
 interface Post {
   id: number;
@@ -22,27 +23,15 @@ interface FeedProps {
 }
 
 export default function Feed({ posts }: FeedProps) {
-  const getImageUrl = (imagePath: string) => {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-    return `${baseUrl}/uploads/images/${imagePath}`;
-  };
-
-  const getAvatarUrl = (avatarPath: string) => {
-    if (!avatarPath) {
-      return "";
-    }
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-    return `${baseUrl}/uploads/images/${avatarPath}`;
-  };
   return (
     <div className="space-y-6">
       {posts.map((post) => (
         <Card key={post.id} className="overflow-hidden">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center space-x-3">
-              {getAvatarUrl(post.user.avatar) ? (
+              {getImageUrl(post.user.avatar) ? (
                 <Image
-                  src={getAvatarUrl(post.user.avatar)}
+                  src={getImageUrl(post.user.avatar)}
                   alt={post.user.username}
                   width={64}
                   height={64}

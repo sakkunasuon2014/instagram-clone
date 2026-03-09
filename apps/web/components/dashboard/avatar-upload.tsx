@@ -13,21 +13,25 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { Label } from "../ui/label";
 import FileUploadArea from "../ui/file-upload-area";
+import { getImageUrl } from "@/lib/image";
 
-interface PhotoUploadProps {
+interface AvatarUploadProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (file: File, caption: string) => Promise<void>;
+  onSubmit: (file: File) => Promise<void>;
+  currentAvatar?: string | null;
 }
 
-export default function PhotoUpload({
+export default function AvatarUpload({
   open,
   onOpenChange,
   onSubmit,
-}: PhotoUploadProps) {
+  currentAvatar,
+}: AvatarUploadProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+
   const handleFileSelect = (file: File) => {
     setSelectedFile(file);
     const reader = new FileReader();
@@ -39,61 +43,64 @@ export default function PhotoUpload({
   const clearSelection = () => {
     setSelectedFile(null);
     setPreview(null);
-    setCaption("");
   };
   const handleUpload = async () => {
-    if (!selectedFile || !caption.trim()) {
+    if (!selectedFile) {
       return;
     }
     setIsUploading(true);
     try {
-      await onSubmit(selectedFile, caption.trim());
+      await onSubmit(selectedFile);
       clearSelection();
       onOpenChange(false);
     } catch (error) {
-      console.error("Error creating post", error);
+      console.error("Error creating avatar", error);
     } finally {
       setIsUploading(false);
     }
   };
-  const [caption, setCaption] = useState("");
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Create new post</DialogTitle>
+          <DialogTitle>Update Profile Picture</DialogTitle>
         </DialogHeader>
         {!preview ? (
-          <FileUploadArea onFileSelect={handleFileSelect} />
+          <div>
+            {currentAvatar && (
+              <div className="flex justify-center">
+                <Image
+                  src={getImageUrl(currentAvatar)}
+                  alt="Current avatar"
+                  className="w-24 h-24 rounded-full object-cover border-2 border-muted"
+                  height={64}
+                  width={64}
+                />
+              </div>
+            )}
+            <FileUploadArea onFileSelect={handleFileSelect} />
+          </div>
         ) : (
           <div className="space-y-4">
-            <div className="relative">
-              <Image
-                src={preview}
-                alt="Preview"
-                height={64}
-                width={64}
-                className="w-full h-64 object-cover rounded-lg"
-              />
-              <Button
-                variant="ghost"
-                size="sm"
-                className="absolute top-2 right-2 bg-black/50 text-white hover:bg-black/70"
-                onClick={clearSelection}
-              >
-                <X className="w-4 h-4  " />
-              </Button>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="caption">Caption</Label>
-              <textarea
-                id="caption"
-                placeholder="Write a caption..."
-                value={caption}
-                onChange={(e) => setCaption(e.target.value)}
-                rows={3}
-                className="w-full p-3 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+            <div className="flex justify-center">
+              <div className="relative">
+                <Image
+                  src={preview}
+                  alt="Preview"
+                  height={128}
+                  width={128}
+                  className="rounded-full object-cover border-2 border-primary"
+                />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute -top-2 -right-2 bg-black/50 text-white hover:bg-black/70 rounded-full p-2"
+                  onClick={clearSelection}
+                >
+                  <X className="w-4 h-4  " />
+                </Button>
+              </div>
             </div>
             <DialogFooter>
               <Button
@@ -103,11 +110,8 @@ export default function PhotoUpload({
               >
                 Back
               </Button>
-              <Button
-                onClick={handleUpload}
-                disabled={isUploading || !caption.trim()}
-              >
-                Share
+              <Button onClick={handleUpload} disabled={isUploading}>
+                {isUploading ? "Updating..." : "Update avatar"}
               </Button>
             </DialogFooter>
           </div>
