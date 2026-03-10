@@ -15,7 +15,7 @@ export class PostsRouter {
   async create(@Input() createPostInput: CreatePostInput) {
     return this.postService.create(
       createPostInput,
-      'iryRVI3SqCrYOviAEye7trbW93wPl6cI',
+      'vAcF4dFsbkwWNw8qQFbp6QTZdiArRUey',
     );
   }
 
