@@ -17,9 +17,31 @@ export const post = pgTable('post', {
     .references(() => user.id),
 });
 
-export const postRelation = relations(post, ({ one }) => ({
+export const postRelation = relations(post, ({ one, many }) => ({
   user: one(user, {
     fields: [post.userId],
     references: [user.id],
+  }),
+  likes: many(like),
+}));
+
+export const like = pgTable('likes', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id),
+  postId: integer('post_id')
+    .notNull()
+    .references(() => post.id),
+});
+
+const likeRelations = relations(like, ({ one }) => ({
+  user: one(user, {
+    fields: [like.userId],
+    references: [user.id],
+  }),
+  post: one(post, {
+    fields: [like.postId],
+    references: [post.id],
   }),
 }));
