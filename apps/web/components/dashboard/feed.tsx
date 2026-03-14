@@ -1,23 +1,10 @@
 "use client";
 import Image from "next/image";
+import { Post } from "@repo/trpc/schemas";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { Heart, MessageCircle, User } from "lucide-react";
 import { getImageUrl } from "../../lib/image";
-
-interface Post {
-  id: number;
-  user: {
-    username: string;
-    avatar: string;
-  };
-  image: string;
-  caption: string;
-  likes: number;
-  comments: number;
-  timestamp: string;
-  isLiked?: boolean;
-}
 
 interface FeedProps {
   posts: Post[];

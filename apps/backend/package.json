@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@repo/trpc": "workspace:*",
     "@better-auth/drizzle-adapter": "^1.5.3",
     "@mguay/nestjs-better-auth": "^1.0.4",
     "@nestjs/common": "^11.0.1",
