@@ -28,7 +28,7 @@ export class PostsRouter {
     @Input() createPostInput: CreatePostInput,
     @Ctx() context: AppContext,
   ) {
-    return this.postService.create(createPostInput, context.user.id);
+    return this.postService.create(createPostInput, context.user);
   }
 
   @Query({ output: z.array(postSchema) })

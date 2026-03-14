@@ -10,20 +10,11 @@ export const post = pgTable('post', {
   id: serial('id').primaryKey(),
   image: text('image').notNull(),
   caption: text('caption').notNull(),
-  // likes: integer('likes').notNull(),
   createdAt: timestamp('CreatedAt').notNull(),
   userId: text('user_id')
     .notNull()
     .references(() => user.id),
 });
-
-export const postRelation = relations(post, ({ one, many }) => ({
-  user: one(user, {
-    fields: [post.userId],
-    references: [user.id],
-  }),
-  likes: many(like),
-}));
 
 export const like = pgTable('likes', {
   id: serial('id').primaryKey(),
@@ -35,7 +26,15 @@ export const like = pgTable('likes', {
     .references(() => post.id),
 });
 
-const likeRelations = relations(like, ({ one }) => ({
+export const postRelation = relations(post, ({ one, many }) => ({
+  user: one(user, {
+    fields: [post.userId],
+    references: [user.id],
+  }),
+  likes: many(like),
+}));
+
+export const likeRelations = relations(like, ({ one }) => ({
   user: one(user, {
     fields: [like.userId],
     references: [user.id],

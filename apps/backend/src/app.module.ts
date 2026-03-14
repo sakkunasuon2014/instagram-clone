@@ -15,6 +15,7 @@ import { UsersModule } from './auth/users/users.module';
 import { UploadModule } from './upload/upload.module';
 import { AppContext } from './app.context';
 import { AuthTrpcMiddleware } from './auth/auth-trpc.middleware';
+import superjson from 'superjson';
 
 @Module({
   imports: [
@@ -24,6 +25,11 @@ import { AuthTrpcMiddleware } from './auth/auth-trpc.middleware';
       autoSchemaFile: '../../packages/trpc/src/server',
       context: AppContext,
       basePath: '/api/trpc',
+      transformer: {
+        runtime: superjson,
+        importName: 'superjson',
+        importPath: 'superjson',
+      },
     }),
     AuthModule.forRootAsync({
       imports: [DatabaseModule, ConfigModule],
