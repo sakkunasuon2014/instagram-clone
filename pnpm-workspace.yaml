@@ -4,5 +4,7 @@ packages:
 
 onlyBuiltDependencies:
   - '@nestjs/core'
+  - esbuild
   - msw
+  - sharp
   - unrs-resolver

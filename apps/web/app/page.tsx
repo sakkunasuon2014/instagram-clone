@@ -15,11 +15,11 @@ export default function Home() {
       utils.postsRouter.findAll.invalidate();
     },
   });
-  const posts = trpc.postsRouter.findAll.useQuery();
+  const posts = trpc.postsRouter.findAll.useQuery({});
   const utils = trpc.useUtils();
   const likePost = trpc.postsRouter.likePost.useMutation({
     onMutate: ({ postId }) => {
-      utils.postsRouter.findAll.setData(undefined, (old) => {
+      utils.postsRouter.findAll.setData({}, (old) => {
         if (!old) return old;
 
         return old.map((post) => {
@@ -35,6 +35,73 @@ export default function Home() {
       });
     },
   });
+
+  const createComment = trpc.commentsRouter.create.useMutation({
+    onSuccess: (_, variables) => {
+      utils.commentsRouter.findByPostId.invalidate({
+        postId: variables.postId,
+      });
+
+      utils.postsRouter.findAll.setData({}, (old) => {
+        if (!old) return old;
+
+        return old.map((post) => {
+          if (post.id === variables.postId) {
+            return { ...post, comments: post.comments + 1 };
+          }
+          return post;
+        });
+      });
+    },
+  });
+
+  const deleteComment = trpc.commentsRouter.delete.useMutation({
+    onSuccess: () => {
+      utils.commentsRouter.findByPostId.invalidate();
+      utils.postsRouter.findAll.invalidate();
+    },
+  });
+
+  const savePost = trpc.postsRouter.savePost.useMutation({
+    onMutate: ({ postId }) => {
+      utils.postsRouter.findAll.setData({}, (old) => {
+        if (!old) return old;
+        return old.map((post) => {
+          if (post.id === postId) {
+            return { ...post, isSaved: !post.isSaved };
+          }
+          return post;
+        });
+      });
+    },
+  });
+
+  const stories = trpc.storiesRouter.getStories.useQuery();
+
+  const createStory = trpc.storiesRouter.create.useMutation({
+    onSuccess: () => {
+      utils.storiesRouter.getStories.invalidate();
+    },
+  });
+
+  const handleStoryUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const uploadResponse = await fetch("/api/upload/image", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!uploadResponse.ok) {
+      throw new Error("Failed to upload image");
+    }
+
+    const { filename } = await uploadResponse.json();
+    await createStory.mutateAsync({
+      image: filename,
+    });
+  };
 
   const handleCreatePost = async (file: File, caption: string) => {
     const formData = new FormData();
@@ -57,10 +124,20 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <Stories />
+            <Stories
+              storyGroups={stories.data || []}
+              onStoryUpload={handleStoryUpload}
+            />
             <Feed
               posts={posts.data || []}
               onLikePost={(postId) => likePost.mutate({ postId })}
+              onAddComment={(postId, text) => {
+                createComment.mutate({ postId, text });
+              }}
+              onDeleteComment={(commentId) => {
+                deleteComment.mutate({ commentId });
+              }}
+              onSavePost={(postId) => savePost.mutate({ postId })}
             />
           </div>
           <div className="lg:sticky lg:top-8 lg:h-fit">

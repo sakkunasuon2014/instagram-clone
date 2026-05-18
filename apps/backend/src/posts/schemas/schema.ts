@@ -5,6 +5,7 @@ import { serial } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 import { user } from '../../auth/schema';
 import { relations } from 'drizzle-orm';
+import { comment } from '../../comments/schemas/schema';
 
 export const post = pgTable('post', {
   id: serial('id').primaryKey(),
@@ -16,7 +17,7 @@ export const post = pgTable('post', {
     .references(() => user.id),
 });
 
-export const like = pgTable('likes', {
+export const like = pgTable('like', {
   id: serial('id').primaryKey(),
   userId: text('user_id')
     .notNull()
@@ -26,12 +27,38 @@ export const like = pgTable('likes', {
     .references(() => post.id),
 });
 
+export const savedPost = pgTable('saved_post', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  postId: integer('post_id')
+    .notNull()
+    .references(() => post.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at')
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
 export const postRelation = relations(post, ({ one, many }) => ({
   user: one(user, {
     fields: [post.userId],
     references: [user.id],
   }),
   likes: many(like),
+  comments: many(comment),
+  savedPosts: many(savedPost),
+}));
+
+export const savedPostRelations = relations(savedPost, ({ one }) => ({
+  user: one(user, {
+    fields: [savedPost.userId],
+    references: [user.id],
+  }),
+  post: one(post, {
+    fields: [savedPost.postId],
+    references: [post.id],
+  }),
 }));
 
 export const likeRelations = relations(like, ({ one }) => ({

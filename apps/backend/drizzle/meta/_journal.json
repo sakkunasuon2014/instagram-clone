@@ -22,6 +22,41 @@
       "when": 1773227586678,
       "tag": "0002_abnormal_leper_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1779098134279,
+      "tag": "0003_typical_proudstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1779098234566,
+      "tag": "0004_magenta_maria_hill",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1779104163180,
+      "tag": "0005_smiling_swarm",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1779104978845,
+      "tag": "0006_tearful_kylun",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1779108613360,
+      "tag": "0007_amusing_bloodstrike",
+      "breakpoints": true
     }
   ]
 }

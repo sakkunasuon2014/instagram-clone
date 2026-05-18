@@ -5,10 +5,14 @@ import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as authSchema from '../auth/schema';
 import * as postsSchema from '../posts/schemas/schema';
+import * as commentsSchema from '../comments/schemas/schema';
+import * as storiesSchema from '../stories/schemas/schema';
 
 export const schema = {
   ...authSchema,
   ...postsSchema,
+  ...commentsSchema,
+  ...storiesSchema,
 };
 @Module({
   imports: [ConfigModule],

@@ -9,9 +9,13 @@ import {
 import {
   CreatePostInput,
   createPostSchema,
+  findAllPostsSchema,
+  FindAllPostsInput,
   LikePostInput,
   likePostSchema,
   postSchema,
+  SavePostInput,
+  savePostSchema,
 } from '@repo/trpc/schemas';
 import { PostsService } from './posts.service';
 import z from 'zod';
@@ -31,9 +35,9 @@ export class PostsRouter {
     return this.postService.create(createPostInput, context.user);
   }
 
-  @Query({ output: z.array(postSchema) })
-  async findAll(@Ctx() context: AppContext) {
-    return this.postService.findAll(context.user.id);
+  @Query({ input: findAllPostsSchema, output: z.array(postSchema) })
+  async findAll(@Input() input: FindAllPostsInput, @Ctx() context: AppContext) {
+    return this.postService.findAll(context.user.id, input.userId);
   }
   @Mutation({ input: likePostSchema })
   async likePost(
@@ -41,5 +45,18 @@ export class PostsRouter {
     @Ctx() context: AppContext,
   ) {
     return this.postService.likePost(likePostInput.postId, context.user.id);
+  }
+
+  @Mutation({ input: savePostSchema })
+  async savePost(
+    @Input() savePostInput: SavePostInput,
+    @Ctx() context: AppContext,
+  ) {
+    return this.postService.savePost(savePostInput.postId, context.user.id);
+  }
+
+  @Query({ output: z.array(postSchema) })
+  async getSavedPosts(@Ctx() context: AppContext) {
+    return this.postService.getSavedPosts(context.user.id);
   }
 }

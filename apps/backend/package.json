@@ -20,16 +20,17 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@repo/trpc": "workspace:*",
     "@better-auth/drizzle-adapter": "^1.5.3",
     "@mguay/nestjs-better-auth": "^1.0.4",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@repo/trpc": "workspace:*",
     "@thallesp/nestjs-better-auth": "^2.4.0",
     "better-auth": "^1.5.3",
     "drizzle-orm": "^0.45.1",
+    "multer": "^2.1.1",
     "nestjs-trpc-v2": "^1.4.1",
     "pg": "^8.19.0",
     "reflect-metadata": "^0.2.2",
